@@ -21,11 +21,11 @@ public class ServiceController {
     public List<Service> GetallService(){
         return serviceRepository.findAll();
     }
-    @GetMapping("service/{id}")
+    @GetMapping("/{id}")
     public Optional<Service> getServiceById(@PathVariable(name = "id")   long id ){
         return serviceRepository.findById(id);
     }
-    @GetMapping("service/{DirectionId}")
+    @GetMapping("/{DirectionId}")
     public Optional<List<Service>> getAllServiceByDirection(@PathVariable(name = "DirectionId") long DirectionId ){
         return serviceRepository.findAllByDirection(DirectionId);
     }
@@ -44,8 +44,8 @@ public class ServiceController {
             throw new Exception(exception);
         }return serviceRepository.save(service1);
     }
-    @DeleteMapping("/delete")
-    public void delete(long id ){
+    @DeleteMapping("/delete/{id}")
+    public void delete(@PathVariable(name = "id") long id ){
         try {
             Service service = serviceRepository.getById(id);
             serviceRepository.delete(service);

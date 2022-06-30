@@ -1,4 +1,5 @@
 package com.myapp.myapp.SreviceImp;
+import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,7 +34,7 @@ public class UserServiceImpl implements UserService {
             try {
                 Optional<User> usertoactivate = userRepository.findById(id);
                 if (usertoactivate.isPresent()){
-                    usertoactivate.get().setActive(true);
+                    usertoactivate.get().setActive(!usertoactivate.get().isActive());
                     userRepository.save(usertoactivate.get());
                 }return usertoactivate.get();
             }catch (Exception e){
@@ -49,7 +50,7 @@ public class UserServiceImpl implements UserService {
         User res = userRepository.save(user);
         if (res !=  null){
             SimpleMailMessage message = new SimpleMailMessage();
-            message.setTo("lotfiguesmi23131916@gmail.com");
+            message.setTo(user.getEmail());
             message.setFrom("pfegmao@gmail.com");
             StringBuilder body = new StringBuilder();
             body.append("hi : ");
@@ -61,7 +62,12 @@ public class UserServiceImpl implements UserService {
             body.append("Your default password is :  ");
             body.append(password);
             message.setText(String.valueOf(body));
-            javaMailSender.send(message);
+            try {
+            	javaMailSender.send(message);
+			} catch (MailException e) {
+				return res ;
+			}
+            
         }
         return res ;
     }catch (Exception exception){
@@ -102,8 +108,14 @@ public class UserServiceImpl implements UserService {
     		 
     		 existUser.setEmail(user.getEmail());
     		 existUser.setFirstname(user.getFirstname());
+    		 existUser.setPhone(user.getPhone());
+    		 existUser.setMatricule(user.getMatricule());
     		 existUser.setPassword(passswordEncoder.encode(user.getPassword()));
     		 existUser.setLastname(user.getLastname());
+    		 existUser.setRole(user.getRole());
+    		 existUser.setService(user.getService());
+    		 existUser.setDirection(user.getDirection());
+    		 
     		return userRepository.save(existUser);
     	 }
     	 

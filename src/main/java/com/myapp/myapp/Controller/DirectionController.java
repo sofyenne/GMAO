@@ -47,8 +47,8 @@ public class DirectionController {
             throw new Exception(exception);
         }return directionRepository.save(direction1);
     }
-    @DeleteMapping("/delete")
-    public void delete(long id ){
+    @DeleteMapping("/delete/{id}")
+    public void delete(@PathVariable(name = "id") long id ){
         try {
             Direction direction = directionRepository.getById(id);
             directionRepository.delete(direction);
